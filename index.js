@@ -1,6 +1,7 @@
 const fs = require("fs");
 const express = require("express");
 const path = require("path");
+const { stringify } = require("querystring");
 
 const app = express();
 app.use(express.static(path.join(__dirname, "client")));
@@ -40,6 +41,18 @@ function writeData(id, price, option) {
     fs.appendFile(`./${option}/card-id-${id}.txt`, price + " --- " + today + `\n`, (err) => {
         if (err) throw err;
     });
+
+    if (option == "Rental_Data") {
+
+        let myObj = {
+            price: price,
+            time: today,
+        }
+
+        fs.appendFile(`./${option}_Json/card-id-${id}.txt`, JSON.stringify(myObj) + `\n`, (err) => {
+            if (err) throw err;
+        });
+    }
 
     if (option == "Rental_Data") {
         if (isLegendary(id)) {
